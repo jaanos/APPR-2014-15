@@ -9,9 +9,6 @@ branje.podatkov <- function(){
 
 M<-branje.podatkov()
 
-M<-branje.podatkov()
-
-
 #čiščenje podatkov
 #odstranjevanje dolarja
 
@@ -24,4 +21,25 @@ M$Zasluzek.po.svetu<-gsub("[$,]", "", M$Zasluzek.po.svetu, ignore.case=TRUE)
 M$Proracun<-as.numeric(M$Proracun)
 M$Zasluzek.v.zda<-as.numeric(M$Zasluzek.v.zda)
 M$Zasluzek.po.svetu<-as.numeric(M$Zasluzek.po.svetu)
+
+#razpredelnica iz interneta
+
+library(XML)
+naslov = "http://www.the-numbers.com/movies/franchises/"
+doc <- htmlTreeParse(naslov, encoding = "UTF-8", useInternal = TRUE)
+r<-xmlRoot(doc)
+tables=readHTMLTable(naslov,as.data.frame = TRUE)
+
+G<-data.frame(tables)
+names(G)<-c("franšiza", "število.delov", "zaslužek.v.zda", "zaslužek.po.svetu")
+
+#ciscenje razpredelni
+
+G$zaslužek.v.zda<-gsub("[$,]", "",G$zaslužek.v.zda, ignore.case=TRUE)
+G$zaslužek.po.svetu<-gsub("[$,]", "", G$zaslužek.po.svetu, ignore.case=TRUE)
+
+G$zaslužek.v.zda<-as.numeric(G$zaslužek.v.zda)
+G$zaslužek.po.svetu<-as.numeric(G$zaslužek.po.svetu)
+G$število.delov<-as.numeric(G$število.delov)
+
 
